@@ -7,6 +7,9 @@ import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
+
+const url = require('url');
+
 const styles = theme => ({
   card: {
     maxWidth: 400,
@@ -31,7 +34,7 @@ const styles = theme => ({
   textField: {
     marginLeft: theme.spacing.unit,
     marginRight: theme.spacing.unit,
-    width: 200,
+    width: '280px',
   },
   dense: {
     marginTop: 19,
@@ -41,15 +44,23 @@ const styles = theme => ({
   },
 });
 
-// function Login(props) {
 
 class Login extends Component {
 
   constructor(props){
     super(props);
+
+    this.urlInfo = url.parse(window.location.href);
+    this.query={}
+    if(this.urlInfo.query){
+      this.urlInfo.query.split('&').forEach((q)=>{
+        const v = q.split('=');
+        this.query[v[0]] = v[1];
+      })
+    }
     this.state = {
-      tenantid: undefined,
-      username: undefined,
+      tenantid: this.query.tenantid || undefined,
+      username: this.query.username || undefined,
       password: undefined,
     }
   }
@@ -62,7 +73,6 @@ class Login extends Component {
   }
  
   render(){
-
     const { classes } = this. props;
     return (
       <Card className={classes.card}>
@@ -75,7 +85,7 @@ class Login extends Component {
           </div>
           <div>
             <TextField
-              id="standard-name"
+              id="standard-tenantid"
               label="Tenantid"
               className={classes.textField}
               value={this.state.tenantid}
@@ -85,7 +95,7 @@ class Login extends Component {
           </div>
           <div>
             <TextField
-              id="standard-name"
+              id="standard-username"
               label="Username"
               className={classes.textField}
               value={this.state.username}
@@ -104,9 +114,14 @@ class Login extends Component {
               margin="normal"
             />
           </div>
+          <div> 
+            <Button variant="contained" color="primary" className={classes.button} style={{width: '280px'}}>
+              Login
+            </Button>
+          </div>
         </CardContent>
-        <CardActions style={{'text-align':'center'}}>
-          <Button size="small">forget password</Button>
+        <CardActions>
+          <Button size="small" style={{ minWidth: 100}}>forget password</Button>
         </CardActions>
       </Card>
     );
